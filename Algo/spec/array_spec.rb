@@ -14,7 +14,7 @@ describe 'A DbcArray' do
     end
     
     it 'contains no items' do
-      expect(@array).to have(0)
+      expect(@array).to have 0
     end
     
   end
@@ -31,11 +31,11 @@ describe 'A DbcArray' do
     end
 
     it 'contains one item' do
-      expect(@array).to have(1)
+      expect(@array).to have 1
     end
 
     it 'can answer the value' do
-      expect(@array.at(0)).to equal(1)
+      expect(@array.at(0)).to eq 1
     end
     
   end
@@ -51,20 +51,26 @@ describe 'A DbcArray' do
       expect(@array).to_not be_empty
     end
 
-    it 'contains one item' do
-      expect(@array).to have(4)
+    it 'contains four items' do
+      expect(@array).to have 4
     end
 
     it 'can answer values' do
-      expect(@array.at(0)).to equal(1)
-      expect(@array.at(1)).to equal(2)
-      expect(@array.at(2)).to equal(3)
-      expect(@array.at(3)).to equal(4)
+      expect(@array.at(0)).to eq 1
+      expect(@array.at(1)).to eq 2
+      expect(@array.at(2)).to eq 3
+      expect(@array.at(3)).to eq 4
     end
 
     it 'can update values' do
-      array.at(2, put: 42)
-      expect(array.at(2)).to equal(42)
+      @array.at(2, put: 42)
+      expect(@array.at(2)).to eq 42
+    end
+
+    it 'can remove values, moving subsequent ones down' do
+      @array.remove_at(1)
+      expect(@array.at(1)).to eq 3
+      expect(@array).to have 3
     end
     
   end

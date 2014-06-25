@@ -1,3 +1,5 @@
+require 'multiset'
+
 def search(ary, n)
   work = 0
   ary.each do |e|
