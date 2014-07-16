@@ -1,3 +1,5 @@
+require 'empty_exception'
+
 class DbcStack
 
   def initialize
@@ -13,11 +15,17 @@ class DbcStack
   end
 
   def pop
+    empty_check
     @storage.delete_at(-1)
   end
 
   def peek
+    empty_check
     @storage[-1]
   end
-  
+
+  def empty_check
+    raise ::EmptyException if empty?
+  end
+
 end

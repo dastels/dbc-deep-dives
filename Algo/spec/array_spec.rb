@@ -8,18 +8,18 @@ describe 'A DbcArray' do
   end
 
   context 'with nothing added' do
-    
+
     it 'is empty' do
       expect(@array).to be_empty
     end
-    
+
     it 'contains no items' do
       expect(@array).to have 0
     end
-    
+
   end
 
-  
+
   context 'after adding an item' do
 
     before(:each) do
@@ -37,9 +37,9 @@ describe 'A DbcArray' do
     it 'can answer the value' do
       expect(@array.at(0)).to eq 1
     end
-    
+
   end
-  
+
 
   context 'after adding several items' do
 
@@ -72,8 +72,8 @@ describe 'A DbcArray' do
       expect(@array.at(1)).to eq 3
       expect(@array).to have 3
     end
-    
+
   end
-  
+
 
 end
