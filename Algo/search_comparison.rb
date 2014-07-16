@@ -12,7 +12,7 @@ end
 def binary_search(ary, n)
   work = 0
   l = 0
-  h = ary.count
+  h = ary.count - 1
   while l <= h
     work += 1
     m = ((l + h) / 2).floor
