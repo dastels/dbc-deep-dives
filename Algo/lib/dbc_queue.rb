@@ -13,6 +13,7 @@ class DbcQueue
   end
 
   def dequeue
+    raise Exception if empty?
     @storage.delete_at(0)
   end
 
