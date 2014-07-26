@@ -1,0 +1,2 @@
+class FullException < Exception
+end

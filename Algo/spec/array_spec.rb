@@ -17,6 +17,28 @@ describe 'A DbcArray' do
       expect(@array).to have 0
     end
 
+    it 'can insert items at index zero' do
+      expect { @array.insert(1, at: 0) }.to_not raise_error
+      expect(@array).to have 1
+      expect(@array.at(0)).to eq 1
+    end
+
+    it 'raises an exception when accessing out of bounds' do
+      expect { @array.at(1) }.to raise_error
+    end
+
+    it 'raises an exception when updating out of bounds' do
+      expect { @array.put(1, at: 1) }.to raise_error
+    end
+
+    it 'raises an exception when removing out of bounds' do
+      expect { @array.remove_at(1) }.to raise_error
+    end
+
+    it 'raises an exception when inserting out of bounds' do
+      expect { @array.insert(42, at: 1) }.to raise_error
+    end
+
   end
 
 
@@ -41,7 +63,7 @@ describe 'A DbcArray' do
   end
 
 
-  context 'after adding several items' do
+  context 'with several items' do
 
     before(:each) do
       @array.append(1).append(2).append(3).append(4)
@@ -71,6 +93,25 @@ describe 'A DbcArray' do
       @array.remove_at(1)
       expect(@array.at(1)).to eq 3
       expect(@array).to have 3
+    end
+
+    context 'and another item inserted' do
+      before(:each) do
+        @array.insert(42, at: 2)
+      end
+
+      it 'has an additional item' do
+        expect(@array).to have 5
+      end
+
+      it 'has the new item in the right place' do
+        expect(@array.at(2)).to eq 42
+      end
+
+      it 'moved the previous value out of the way' do
+        expect(@array.at(3)).to eq 3
+      end
+      
     end
 
   end

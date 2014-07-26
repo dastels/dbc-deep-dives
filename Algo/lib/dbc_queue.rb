@@ -1,3 +1,5 @@
+require 'empty_exception'
+
 class DbcQueue
 
   def initialize
@@ -13,7 +15,7 @@ class DbcQueue
   end
 
   def dequeue
-    raise Exception if empty?
+    raise ::EmptyException if empty?
     @storage.delete_at(0)
   end
 

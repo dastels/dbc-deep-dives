@@ -1,8 +1,11 @@
+require 'empty_exception'
+require 'full_exception'
+
 class DbcCircularQueue
 
   def initialize(size)
-    @capacity = size
-    @storage = Array.new(size)
+    @capacity = size + 1
+    @storage = Array.new(@capacity)
     @front = 0
     @rear = 0
   end
@@ -27,13 +30,13 @@ class DbcCircularQueue
   
   def enqueue(item)
     potential_rear = advance(@rear)
-    throw :full if @front == potential_rear
+    raise ::FullException if @front == potential_rear
     @rear = potential_rear
     @storage[@rear] = item
   end
 
   def dequeue
-    throw :empty if @front == @rear
+    raise ::EmptyException if @front == @rear
     @front = advance(@front)
     @storage[@front]
   end

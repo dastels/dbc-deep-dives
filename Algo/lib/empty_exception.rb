@@ -1,0 +1,2 @@
+class EmptyException < Exception
+end
