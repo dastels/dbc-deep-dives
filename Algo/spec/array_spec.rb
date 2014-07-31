@@ -28,7 +28,7 @@ describe 'A DbcArray' do
     end
 
     it 'raises an exception when updating out of bounds' do
-      expect { @array.put(1, at: 1) }.to raise_error
+      expect { @array.at(1, put: 1) }.to raise_error
     end
 
     it 'raises an exception when removing out of bounds' do
