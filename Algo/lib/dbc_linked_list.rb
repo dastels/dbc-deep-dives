@@ -3,6 +3,15 @@ class DBCLinkedList
     @head = nil
   end
 
+  def to_a
+    if @head.nil?
+      []
+    else
+      @head.to_a
+    end
+
+  end
+
   def empty?
     @head.nil?
   end
@@ -22,30 +31,62 @@ class DBCLinkedList
     else
       @head.append(new_node)
     end
+    new_node
   end
 
+  def prepend(value)
+    @head = ListNode.new(value, @head)
+  end
+
+  def find(value)
+    if @head.nil?
+      nil
+    else
+      @head.find(value)
+    end
+  end
 end
 
 
 class ListNode
-  def initialize(value)
+
+  def initialize(value, rest=nil)
     @value = value
-    @next = nil
+    @rest = rest
+  end
+
+  def to_a
+    if @rest.nil?
+      [@value]
+    else
+      @rest.to_a.unshift(@value)
+    end
   end
 
   def append(node)
-    if @next.nil?
-      @next = node
+    if @rest.nil?
+      @rest = node
     else
-      @next.append(node)
+      @rest.append(node)
     end
   end
 
   def size
-    if @next.nil?
+    if @rest.nil?
       1
     else
-      1 + @next.size
+      1 + @rest.size
     end
   end
+
+  def find(value)
+    if @value == value
+      self
+    elsif @rest.nil?
+      nil
+    else
+      @rest.find(value)
+    end
+  end
+
 end
