@@ -45,6 +45,39 @@ class DBCLinkedList
       @head.find(value)
     end
   end
+
+  def insert_after(value, node)
+    n = ListNode.new(value)
+    n.insert_after(node)
+  end
+
+  def delete(node)
+    if @head.nil?
+      return
+    elsif @head == node
+      @head = node.rest
+    else
+      previous = @head.before(node)
+      previous.rest = node.rest
+    end
+  end
+
+  def map(&block)
+    if @head.nil?
+      nil
+    else
+      @head.map &block
+    end
+  end
+
+  def reduce(initial, &block)
+    if @head.nil?
+      initial
+    else
+      @head.reduce(initial, &block)
+    end
+  end
+  
 end
 
 
@@ -87,6 +120,45 @@ class ListNode
     else
       @rest.find(value)
     end
+  end
+
+  def insert_after(node)
+    @rest = node.rest
+    node.rest = self
+  end
+
+  def before(node)
+    if @rest == node
+      self
+    else
+      @rest.before(node)
+    end
+  end
+
+  def map(&block)
+    new_value = block.call(@value)
+    if @rest.nil?
+      ListNode.new(new_value)
+    else
+      ListNode.new(new_value, @rest.map(&block))
+    end
+  end
+
+  def reduce(acc, &block)
+    new_acc = block.call(acc, @value)
+    if @rest.nil?
+      new_acc
+    else
+      @rest.reduce(new_acc, &block)
+    end
+  end
+
+  def rest
+    @rest
+  end
+
+  def rest=(n)
+    @rest = n
   end
 
 end
