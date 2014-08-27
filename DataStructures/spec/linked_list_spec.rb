@@ -135,4 +135,59 @@ describe "DBCLinkedList" do
     end
     
   end
+
+
+  context "can insert in order (bonus)" do
+
+    it "can insert into an empty list" do
+      @l.insert(4)
+      expect(@l.to_a).to eql [4]
+    end
+
+    it "can insert at the beginning" do
+      @l.insert(4)
+      @l.insert(2)
+      expect(@l.to_a).to eql [2, 4]
+    end
+
+    it "can insert in the middle" do
+      @l.insert(4)
+      @l.insert(2)
+      @l.insert(3)
+      expect(@l.to_a).to eql [2, 3, 4]
+    end
+    
+    it "can insert at the end" do
+      @l.insert(4)
+      @l.insert(2)
+      @l.insert(3)
+      @l.insert(5)
+      expect(@l.to_a).to eql [2, 3, 4, 5]
+    end
+    
+  end
+
+
+  context "can find with a predicate block" do
+
+    before(:each) do
+      @l.insert(1)
+      @l.insert(3)
+      @l.insert(4)
+      @l.insert(5)
+      @l.insert(6)
+      @l.insert(10)
+    end
+
+    it "can find the first even" do
+      expect(@l.find {|i| i.even?}).to eql [4, 5, 6, 10]
+    end
+    
+    it "can find somethign divisible by 2 and 3" do
+      expect(@l.find {|i| i % 2 == 0 && i % 3 == 0}).to eql [6, 10]
+    end
+    
+  end
+  
+
 end
