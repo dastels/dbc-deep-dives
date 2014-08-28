@@ -125,7 +125,7 @@ describe "DBCLinkedList" do
     it "can map" do
       expect((@l.map {|v| v * v}).to_a).to eql [1, 4, 9, 16]
     end
- 
+
     it "can do an add reduction" do
       expect(@l.reduce(0) {|acc, v| acc + v}).to eql 10
     end
@@ -191,6 +191,25 @@ describe "DBCLinkedList" do
     end
     
   end
-  
 
+
+  context "can map with another list" do
+
+    before(:each) do
+      @l.append(1)
+      @l.append(2)
+      @l.append(3)
+      @l.append(4)
+      @l2 = DBCLinkedList.new
+      @l2.append(10)
+      @l2.append(20)
+      @l2.append(30)
+      @l2.append(40)
+    end
+
+    it "can map + over two lists" do
+      expect((@l.map_with(@l2) {|a, b| a + b}).to_a).to eql [11, 22, 33, 44]
+    end
+
+  end
 end

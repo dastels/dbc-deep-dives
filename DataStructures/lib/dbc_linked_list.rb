@@ -1,4 +1,6 @@
 class DBCLinkedList
+
+  attr_reader :head
   
   def initialize(head = nil)
     @head = head
@@ -76,6 +78,15 @@ class DBCLinkedList
       DBCLinkedList.new
     else
       DBCLinkedList.new(@head.map &block)
+    end
+  end
+
+  
+  def map_with(list, &block)
+    if @head.nil?
+      DBCLinkedList.new
+    else
+      DBCLinkedList.new(@head.map_with(list.head, &block))
     end
   end
 
@@ -180,8 +191,14 @@ class ListNode
 
   
   def map(&block)
-    rest = @rest.nil? ? nil : (@rest.map &block)
+    rest = @rest.nil? ? nil : @rest.map(&block)
     ListNode.new(block.call(@value), rest)
+  end
+
+  
+  def map_with(node, &block)
+    new_rest = (@rest.nil? || node.rest.nil?) ? nil : @rest.map_with(node.rest, &block)
+    ListNode.new(block.call(@value, node.value), new_rest)
   end
 
   
