@@ -1,21 +1,29 @@
 class DBCLinkedList
-  def initialize
-    @head = nil
+  
+  def initialize(head = nil)
+    @head = head
   end
 
-  def to_a
-    if @head.nil?
-      []
-    else
-      @head.to_a
-    end
-
-  end
-
+  
   def empty?
     @head.nil?
   end
 
+  
+  def prepend(value)
+    @head = ListNode.new(value, @head)
+  end
+
+  
+  def append(value)
+    if @head.nil?
+      @head = ListNode.new(value)
+    else
+      @head.append(value)
+    end
+  end
+
+  
   def size
     if @head.nil?
       0
@@ -24,70 +32,107 @@ class DBCLinkedList
     end
   end
 
-  def append(value)
-    new_node = ListNode.new(value)
+  
+  def to_a
     if @head.nil?
-      @head = new_node
+      []
     else
-      @head.append(new_node)
+      @head.to_a
     end
-    new_node
   end
 
-  def prepend(value)
-    @head = ListNode.new(value, @head)
-  end
-
-  def find(value)
+  
+  def find(value = nil, &block)
     if @head.nil?
       nil
     else
-      @head.find(value)
+      if value
+        @head.find(value)
+      else
+        @head.find_with_predicate(&block)
+      end
     end
   end
 
+  
   def insert_after(value, node)
-    n = ListNode.new(value)
-    n.insert_after(node)
+    node.insert_after(value)
   end
 
+  
   def delete(node)
     if @head.nil?
-      return
+      nil
     elsif @head == node
       @head = node.rest
     else
-      previous = @head.before(node)
-      previous.rest = node.rest
+      @head.delete(node)
     end
   end
 
+  
   def map(&block)
+    if @head.nil?
+      DBCLinkedList.new
+    else
+      DBCLinkedList.new(@head.map &block)
+    end
+  end
+
+  
+  def reduce(initial, &block)
     if @head.nil?
       nil
     else
-      @head.map &block
+      @head.reduce(initial, &block)
     end
   end
 
-  def reduce(initial, &block)
-    if @head.nil?
-      initial
+  
+  def insert(value)
+    if @head.nil? || value < @head.value
+      @head = ListNode.new(value, @head)
     else
-      @head.reduce(initial, &block)
+      @head.insert(value)
     end
   end
   
 end
 
 
+#--------------------------------------------------------------------------------
+
+
 class ListNode
 
+  attr_accessor :rest
+  attr_reader :value
+
+  
   def initialize(value, rest=nil)
     @value = value
     @rest = rest
   end
 
+  
+  def size
+    if @rest.nil?
+      1
+    else
+      @rest.size + 1
+    end
+  end
+
+  
+  def append(value)
+    if @rest.nil?
+      @rest = ListNode.new(value)
+    else
+      @rest.append(value)
+    end
+  end
+
+  
   def to_a
     if @rest.nil?
       [@value]
@@ -96,22 +141,7 @@ class ListNode
     end
   end
 
-  def append(node)
-    if @rest.nil?
-      @rest = node
-    else
-      @rest.append(node)
-    end
-  end
-
-  def size
-    if @rest.nil?
-      1
-    else
-      1 + @rest.size
-    end
-  end
-
+  
   def find(value)
     if @value == value
       self
@@ -122,28 +152,39 @@ class ListNode
     end
   end
 
-  def insert_after(node)
-    @rest = node.rest
-    node.rest = self
-  end
-
-  def before(node)
-    if @rest == node
+  
+  def find_with_predicate(&block)
+    if block.call(@value)
       self
+    elsif @rest.nil?
+      nil
     else
-      @rest.before(node)
+      @rest.find_with_predicate(&block)
     end
   end
 
+  
+  def insert_after(value)
+    @rest = ListNode.new(value, @rest)
+  end
+
+  def delete(node)
+    if @rest == node
+      @rest = node.rest
+    elsif @rest.nil?
+      nil
+    else
+      @rest.delete(node)
+    end
+  end
+
+  
   def map(&block)
-    new_value = block.call(@value)
-    if @rest.nil?
-      ListNode.new(new_value)
-    else
-      ListNode.new(new_value, @rest.map(&block))
-    end
+    rest = @rest.nil? ? nil : (@rest.map &block)
+    ListNode.new(block.call(@value), rest)
   end
 
+  
   def reduce(acc, &block)
     new_acc = block.call(acc, @value)
     if @rest.nil?
@@ -153,12 +194,15 @@ class ListNode
     end
   end
 
-  def rest
-    @rest
+  
+  def insert(value)
+    if @rest.nil?
+      @rest = ListNode.new(value)
+    elsif value < @rest.value
+      @rest = ListNode.new(value, @rest)
+    else
+      @rest.insert(value)
+    end
   end
-
-  def rest=(n)
-    @rest = n
-  end
-
+  
 end

@@ -168,23 +168,26 @@ describe "DBCLinkedList" do
   end
 
 
-  context "can find with a predicate block" do
+  context "can find with a predicate block (bonus)" do
+
+    # NOTE: since find returns a ListNode, to_a converts the list
+    # which that node is the head of
 
     before(:each) do
-      @l.insert(1)
-      @l.insert(3)
-      @l.insert(4)
-      @l.insert(5)
-      @l.insert(6)
-      @l.insert(10)
+      @l.append(1)
+      @l.append(3)
+      @l.append(4)
+      @l.append(5)
+      @l.append(6)
+      @l.append(10)
     end
 
     it "can find the first even" do
-      expect(@l.find {|i| i.even?}).to eql [4, 5, 6, 10]
+      expect((@l.find {|i| i.even?}).to_a).to eql [4, 5, 6, 10]
     end
     
-    it "can find somethign divisible by 2 and 3" do
-      expect(@l.find {|i| i % 2 == 0 && i % 3 == 0}).to eql [6, 10]
+    it "can find something divisible by 2 and 3" do
+      expect((@l.find {|i| i % 2 == 0 && i % 3 == 0}).to_a).to eql [6, 10]
     end
     
   end
