@@ -4,6 +4,22 @@ class DBCBinaryTree
     @root = nil
   end
 
+
+  def empty?
+    @root.nil?
+  end
+
+
+  def size
+    @root.nil? ? 0 : @root.size
+  end
+
+  
+  def depth
+    @root.nil? ? 0 : @root.depth
+  end
+  
+
   def insert(n)
     if @root.nil?
       @root = BinaryTreeNode.new(n)
@@ -14,19 +30,28 @@ class DBCBinaryTree
 
 
   def find(n)
-    if @root.nil?
-      false
-    else
-      @root.find(n)
-    end
+    @root.nil? ? false : @root.find(n)
   end
   
 
   def to_s
-    return '[]' if @root.nil?
-    @root.to_s
+    @root.nil? ? '[]' : @root.to_s
   end
-  
+
+
+  def preorder &block
+      @root.preorder &block unless @root.nil?
+  end
+
+
+  def inorder &block
+      @root.inorder &block unless @root.nil?
+  end
+
+
+  def postorder &block
+      @root.postorder &block unless @root.nil?
+  end
 
 end
 
@@ -40,6 +65,20 @@ class BinaryTreeNode
   end
 
 
+  def size
+    left_size = @left.nil? ? 0 : @left.size
+    right_size = @right.nil? ? 0 : @right.size
+    left_size + right_size + 1
+  end
+
+
+  def depth
+    left_depth = @left.nil? ? 0 : @left.depth
+    right_depth = @right.nil? ? 0 : @right.depth
+    [left_depth, right_depth].max + 1
+  end
+
+  
   def insert(n)
     return if n == @value
     if n < @value
@@ -64,5 +103,26 @@ class BinaryTreeNode
     right_string = @right.nil? ? '-' : @right.to_s
     "[#{left_string} #{@value} #{right_string}]"
   end
+
+
+  def preorder &block
+    block.call(@value)
+    @left.preorder &block unless @left.nil?
+    @right.preorder &block unless @right.nil?
+  end
+
   
+  def inorder &block
+    @left.inorder &block unless @left.nil?
+    block.call(@value)
+    @right.inorder &block unless @right.nil?
+  end
+
+  
+  def postorder &block
+    @left.postorder &block unless @left.nil?
+    @right.postorder &block unless @right.nil?
+    block.call(@value)
+  end
+
 end
