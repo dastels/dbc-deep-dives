@@ -132,6 +132,11 @@ describe 'DBCBinaryTree' do
       expect(a.join(" ")).to eql "3 7 5 11 20 15 10"
     end
 
+    it "maps" do
+      new_tree = @tree.map {|i| i + 1}
+      expect(new_tree.to_s).to eql  "[[[- 4 -] 6 [- 8 -]] 11 [[- 12 -] 16 [- 21 -]]]"
+    end
+
   end
 
 

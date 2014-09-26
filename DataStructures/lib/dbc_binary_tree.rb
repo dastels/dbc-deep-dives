@@ -1,7 +1,7 @@
 class DBCBinaryTree
 
-  def initialize
-    @root = nil
+  def initialize(r=nil)
+    @root = r
   end
 
 
@@ -53,15 +53,19 @@ class DBCBinaryTree
       @root.postorder &block unless @root.nil?
   end
 
+  def map &block
+    @root.nil? ? DBCBinaryTree.new : DBCBinaryTree.new(@root.map &block)
+  end
+
 end
 
 
 class BinaryTreeNode
 
-  def initialize(n)
+  def initialize(n, l=nil, r=nil)
     @value = n
-    @left = nil
-    @right = nil
+    @left = l
+    @right = r
   end
 
 
@@ -124,5 +128,12 @@ class BinaryTreeNode
     @right.postorder &block unless @right.nil?
     block.call(@value)
   end
+
+  def map &block
+    l = @left.nil? ? nil : (@left.map &block)
+    r = @right.nil? ? nil : (@right.map &block)
+    BinaryTreeNode.new(block.call(@value), l, r)
+  end
+
 
 end
