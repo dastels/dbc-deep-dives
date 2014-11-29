@@ -139,5 +139,20 @@ describe 'DBCBinaryTree' do
 
   end
 
+  context 'unbalanced' do
+    it "doesn't balance" do
+      @tree = DBCBinaryTree.new
+      @tree.insert(12)
+      @tree.insert(8)
+      @tree.insert(18)
+      @tree.insert(17)
+      @tree.insert(5)
+      @tree.insert(11)
+      @tree.insert(4)
+      @tree.insert(7)
+      @tree.insert(2)
 
+      expect(@tree.to_s).to eql "[[[[[- 2 -] 4 -] 5 [- 7 -]] 8 [- 11 -]] 12 [[- 17 -] 18 -]]"
+    end
+  end
 end
