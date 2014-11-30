@@ -153,7 +153,7 @@ describe 'DBCAVLTree' do
       @tree.insert(7)
       @tree.insert(2)
 
-      expect(@tree.to_s).to eql "[[[[- 2 -] 4 -] 5 [- 8 [ - 11 -]]] 12 [[- 17 -] 18 -]]"
+      expect(@tree.to_s).to eql "[[[[- 2 -] 4 -] 5 [[- 7 -] 8 [- 11 -]]] 12 [[- 17 -] 18 -]]"
     end
   end
 

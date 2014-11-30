@@ -60,12 +60,12 @@ class DBCAVLTree
 end
 
 
-class NilTreeNode
+class NilAvlTreeNode
 
   @@instance = nil
   
   def self.instance
-    @@instance = NilTreeNode.new if @@instance.nil?
+    @@instance = NilAvlTreeNode.new if @@instance.nil?
     @@instance
   end
 
@@ -136,7 +136,7 @@ class AVLTreeNode
 
   attr_reader :value, :left, :right
 
-  def initialize(n, l=NilTreeNode.instance, r=NilTreeNode.instance)
+  def initialize(n, l=NilAvlTreeNode.instance, r=NilAvlTreeNode.instance)
     @value = n
     @left = l
     @right = r
@@ -153,11 +153,6 @@ class AVLTreeNode
   end
 
 
-  def compute_balance
-    @left.depth - @right.depth
-  end
-
-  
   def insert(n)
     # Perform the normal BST insertion
     
@@ -169,26 +164,42 @@ class AVLTreeNode
     end
 
     # Get the balance factor of this node to check whether this node became unbalanced
-    balance = compute_balance
+    balance = @left.depth - @right.depth
 
     # If this node becomes unbalanced, then there are 4 cases
 
     # Left Left Case
-    return right_rotate if balance > 1 && @value < @left.value
+    if balance > 1 && n < @left.value
+      # puts "Balance is #{balance}"
+      # puts "Left Left inserting #{n} at #{@value}"
+      # puts to_s
+      return right_rotate
+    end
  
     # Right Right Case
-    return left_rotate if balance < -1 && @value > @right.value
+    if balance < -1 && n > @right.value
+      # puts "Balance is #{balance}"
+      # puts "Right Right inserting #{n} at #{@value}"
+      # puts to_s
+      return left_rotate
+    end
         
     # Left Right Case
-    if balance > 1 && @value > @left.value
-        @left = @left.left_rotate
-        return right_rotate
+    if balance > 1 && n > @left.value
+      # puts "Balance is #{balance}"
+      # puts "Left Right inserting #{n} at #{@value}"
+      # puts to_s
+      @left = @left.left_rotate
+      return right_rotate
     end
  
     # Right Left Case
-    if balance < -1 && @value < @right.value
-        @right = @right.right_rotate
-        return left_rotate
+    if balance < -1 && n < @right.value
+      # puts "Balance is #{balance}"
+      # puts "Right Left inserting #{n} at #{@value}"
+      # puts to_s
+      @right = @right.right_rotate
+      return left_rotate
     end
  
     # return the (unchanged) node pointer
