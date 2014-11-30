@@ -154,56 +154,34 @@ class AVLTreeNode
 
 
   def insert(n)
-    # Perform the normal BST insertion
-    
     return if n == @value
+
     if n < @value
       @left = @left.insert(n)
     else
       @right = @right.insert(n)
     end
 
-    # Get the balance factor of this node to check whether this node became unbalanced
     balance = @left.depth - @right.depth
 
-    # If this node becomes unbalanced, then there are 4 cases
-
-    # Left Left Case
-    if balance > 1 && n < @left.value
-      # puts "Balance is #{balance}"
-      # puts "Left Left inserting #{n} at #{@value}"
-      # puts to_s
-      return right_rotate
+    if balance > 1 && n < @left.value 
+     return right_rotate
     end
  
-    # Right Right Case
     if balance < -1 && n > @right.value
-      # puts "Balance is #{balance}"
-      # puts "Right Right inserting #{n} at #{@value}"
-      # puts to_s
       return left_rotate
     end
         
-    # Left Right Case
     if balance > 1 && n > @left.value
-      # puts "Balance is #{balance}"
-      # puts "Left Right inserting #{n} at #{@value}"
-      # puts to_s
       @left = @left.left_rotate
       return right_rotate
     end
  
-    # Right Left Case
     if balance < -1 && n < @right.value
-      # puts "Balance is #{balance}"
-      # puts "Right Left inserting #{n} at #{@value}"
-      # puts to_s
       @right = @right.right_rotate
       return left_rotate
     end
  
-    # return the (unchanged) node pointer
-    
     self
   end
 
