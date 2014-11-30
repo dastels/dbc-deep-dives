@@ -60,81 +60,9 @@ class DBCBinaryTree
 end
 
 
-class NilTreeNode
-
-  @@instance = nil
-  
-  def self.instance
-    @@instance = NilTreeNode.new if @@instance.nil?
-    @@instance
-  end
-
-  def nil?
-    true
-  end
-
-  def value
-    0
-  end
-
-  def left
-    @@instance
-  end
-
-  def right
-    @@instance
-  end
-
-  def size
-    0
-  end
-
-  def depth
-    0
-  end
-
-  def compute_balance
-    0
-  end
-  
-  def insert(n)
-   BinaryTreeNode.new(n)
-  end
-
-  def left_rotate
-    @@instance
-  end
-
-  def right_rotate
-    @@instance
-  end    
-
-  def find(n)
-    false
-  end
- 
-  def to_s
-    "-"
-  end
-
-  def preorder &block
-  end
-
-  def inorder &block
-  end
-
-  def postorder &block
-  end
-
-  def map &block
-    @@instance
-  end
-end
-
-
 class BinaryTreeNode
 
-  def initialize(n, l=NilTreeNode.instance, r=NilTreeNode.instance)
+  def initialize(n, l=nil, r=nil)
     @value = n
     @left = l
     @right = r
@@ -142,21 +70,25 @@ class BinaryTreeNode
 
 
   def size
-    @left.size + @right.size + 1
+    left_size = @left.nil? ? 0 : @left.size
+    right_size = @right.nil? ? 0 : @right.size
+    left_size + right_size + 1
   end
 
 
   def depth
-    [@left.depth, @right.depth].max + 1
+    left_depth = @left.nil? ? 0 : @left.depth
+    right_depth = @right.nil? ? 0 : @right.depth
+    [left_depth, right_depth].max + 1
   end
 
   
   def insert(n)
     return if n == @value
     if n < @value
-      @left = @left.insert(n)
+      @left = @left.nil? ? BinaryTreeNode.new(n) : @left.insert(n)
     else
-      @right = @right.insert(n)
+      @right = @right.nil? ? BinaryTreeNode.new(n) : @right.insert(n)
     end
     self
   end
@@ -164,38 +96,43 @@ class BinaryTreeNode
 
   def find(n)
     return true if @value == n
-    return @left.find(n) unless n > @value
-    return @right.find(n)
+    return @left.find(n) unless @left.nil? || n > @value
+    return @right.find(n) unless @right.nil?
+    false
   end
   
 
   def to_s
-    "[#{@left} #{@value} #{@right}]"
+    left_string = @left.nil? ? '-' : @left.to_s
+    right_string = @right.nil? ? '-' : @right.to_s
+    "[#{left_string} #{@value} #{right_string}]"
   end
 
 
   def preorder &block
     block.call(@value)
-    @left.preorder &block
-    @right.preorder &block
+    @left.preorder &block unless @left.nil?
+    @right.preorder &block unless @right.nil?
   end
 
   
   def inorder &block
-    @left.inorder &block
+    @left.inorder &block unless @left.nil?
     block.call(@value)
-    @right.inorder &block
+    @right.inorder &block unless @right.nil?
   end
 
   
   def postorder &block
-    @left.postorder &block
-    @right.postorder &block
+    @left.postorder &block unless @left.nil?
+    @right.postorder &block unless @right.nil?
     block.call(@value)
   end
 
   def map &block
-    BinaryTreeNode.new(block.call(@value), (@left.map &block), (@right.map &block))
+    l = @left.nil? ? nil : (@left.map &block)
+    r = @right.nil? ? nil : (@right.map &block)
+    BinaryTreeNode.new(block.call(@value), l, r)
   end
 
 
