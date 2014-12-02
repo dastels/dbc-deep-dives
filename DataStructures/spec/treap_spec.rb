@@ -137,6 +137,15 @@ describe 'DBCTreap' do
       expect(new_tree.to_s).to eql  "[[[- (3 D) -] (5 B) [- (7 E) -]] (10 A) [[- (11 F) -] (15 C) [- (20 G) -]]]"
     end
 
+    it "enumerates" do
+      a = []
+      @tree.each {|i| a << i}
+      expect(a.join(" ")).to eql "d b e a f c g"
+    end
+
+    it "enumerates faster" do
+    end
+    
   end
 
 
