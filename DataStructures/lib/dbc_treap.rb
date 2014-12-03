@@ -2,6 +2,8 @@ class DBCTreap
 
   def initialize(r=nil)
     @root = r
+    @lowest = NilTreapNode.instance
+    @highest = NilTreapNode.instance
   end
 
 
@@ -23,9 +25,15 @@ class DBCTreap
   def insert(k, v)
     if @root.nil?
       @root = TreapNode.new(k, v)
+      @lowest = @root
+      @highest = @root
     else
       @root.insert(k, v)
     end
+
+    a = []
+    @root.each {|i| a << i}
+    puts a.join(' ')
   end
 
 
@@ -57,6 +65,10 @@ class DBCTreap
     @root.nil? ? DBCTreap.new : DBCTreap.new(@root.map &block)
   end
 
+  def each &block
+    @lowest.each &block
+  end
+  
 end
 
 
@@ -85,6 +97,20 @@ class NilTreapNode
     @@instance
   end
 
+  def next
+    @@instance
+  end
+
+  def previous
+    @@instance
+  end
+
+  def next=(n)
+  end
+
+  def previous=(p)
+  end
+
   def size
     0
   end
@@ -98,7 +124,7 @@ class NilTreapNode
   end
   
   def insert(k, v)
-   TreapNode.new(k, v)
+   [TreapNode.new(k, v), true]
   end
 
   def left_rotate
@@ -129,18 +155,25 @@ class NilTreapNode
   def map &block
     @@instance
   end
+
+  def each &block
+  end
+
 end
 
 
 class TreapNode
 
   attr_reader :key, :value, :left, :right
+  attr_accessor :next, :previous
 
-  def initialize(k, v, l=NilTreapNode.instance, r=NilTreapNode.instance)
+  def initialize(k, v, l=NilTreapNode.instance, r=NilTreapNode.instance, n=NilTreapNode.instance, p=NilTreapNode.instance)
     @key = k
     @value = v
     @left = l
     @right = r
+    @next = n
+    @previous = p
   end
 
 
@@ -155,45 +188,57 @@ class TreapNode
 
 
   def insert(k, v)
-    return if k == @key
+    return [nil, false] if k == @key
 
     if k < @key
-      @left = @left.insert(k, v)
+      l, direct = @left.insert(k, v)
+      return [nil, false] if l.nil?
+      @left = l
+      if direct
+        @left.next = self
+        @previous = @left
+      end
     else
-      @right = @right.insert(k, v)
+      r, direct = @right.insert(k, v)
+      return [nil, false] if r.nil?
+      @right = r
+      if direct
+        @right.previous = self
+        @next = @right
+      end
     end
 
     balance = @left.depth - @right.depth
 
     if balance > 1 && k < @left.key
-     return right_rotate
+     return [right_rotate, false]
     end
  
     if balance < -1 && k > @right.key
-      return left_rotate
+      return [left_rotate, false]
     end
         
     if balance > 1 && k > @left.key
       @left = @left.left_rotate
-      return right_rotate
+      return [right_rotate, false]
     end
  
     if balance < -1 && k < @right.key
       @right = @right.right_rotate
-      return left_rotate
+      return [left_rotate, false]
     end
  
-    self
+    [self, false]
   end
 
 
   def left_rotate
-    TreapNode.new(@right.key, @right.value, TreapNode.new(@key, @value, @left, @right.left), @right.right)
+    TreapNode.new(@right.key, @right.value, TreapNode.new(@key, @value, @left, @right.left, @next, @previous), @right.right, @right.next, @right.previous)
   end
 
 
   def right_rotate
-    TreapNode.new(@left.key, @left.value, @left.left, TreapNode.new(@key, @value, @left.right, @right))
+    TreapNode.new(@left.key, @left.value, @left.left, TreapNode.new(@key, @value, @left.right, @right, @next, @previous), @left.next, @left.previous)
   end    
 
 
@@ -231,6 +276,11 @@ class TreapNode
 
   def map &block
     TreapNode.new(@key, block.call(@value), (@left.map &block), (@right.map &block))
+  end
+
+  def each &block
+    block.call(@value)
+    @next.each(&block)
   end
 
 
