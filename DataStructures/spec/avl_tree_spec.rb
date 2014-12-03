@@ -141,6 +141,7 @@ describe 'DBCAVLTree' do
 
 
   context 'with unbalanced insertion' do
+
     it "balances" do
       @tree = DBCAVLTree.new
       @tree.insert(12)
@@ -153,8 +154,22 @@ describe 'DBCAVLTree' do
       @tree.insert(7)
       @tree.insert(2)
 
-      expect(@tree.to_s).to eql "[[[[- 2 -] 4 -] 5 [[- 7 -] 8 [- 11 -]]] 12 [[- 17 -] 18 -]]"
+      expect(@tree).to be_balanced
     end
+
+    it "is always balanced" do
+      puts
+      (1..100).each do |i|
+        puts i
+        @tree = DBCAVLTree.new
+        (1..1000).each do |j|
+          r = (rand * 100).to_i
+          @tree.insert(r)
+          expect(@tree).to be_balanced
+        end
+      end
+    end
+    
   end
 
 end

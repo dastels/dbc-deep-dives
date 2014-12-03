@@ -24,10 +24,15 @@ class DBCAVLTree
     if @root.nil?
       @root = AVLTreeNode.new(n)
     else
-      @root.insert(n)
+      @root = @root.insert(n)
     end
   end
 
+
+  def balanced?
+    @root.nil? || @root.balanced?
+  end
+    
 
   def find(n)
     @root.nil? ? false : @root.find(n)
@@ -101,6 +106,10 @@ class NilAvlTreeNode
    AVLTreeNode.new(n)
   end
 
+  def balanced?
+    true
+  end
+
   def left_rotate
     @@instance
   end
@@ -154,7 +163,7 @@ class AVLTreeNode
 
 
   def insert(n)
-    return if n == @value
+    return self if n == @value
 
     if n < @value
       @left = @left.insert(n)
@@ -195,6 +204,11 @@ class AVLTreeNode
     AVLTreeNode.new(@left.value, @left.left, AVLTreeNode.new(@value, @left.right, @right))
   end    
 
+
+  def balanced?
+    (@left.depth - @right.depth).abs <= 1
+  end
+  
 
   def find(n)
     return true if @value == n
