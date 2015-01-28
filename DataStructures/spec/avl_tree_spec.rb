@@ -163,7 +163,7 @@ describe 'DBCAVLTree' do
         puts i
         @tree = DBCAVLTree.new
         (1..1000).each do |j|
-          r = (rand * 10000).to_i
+          r = (rand * 100000).to_i
           @tree.insert(r)
           expect(@tree).to be_balanced
         end
