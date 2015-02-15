@@ -1,6 +1,6 @@
 class DBCBinaryTree
 
-  def initialize(r=nil)
+  def initialize(r=NilTreeNode.instance)
     @root = r
   end
 
@@ -11,26 +11,22 @@ class DBCBinaryTree
 
 
   def size
-    @root.nil? ? 0 : @root.size
+    @root.size
   end
 
   
   def depth
-    @root.nil? ? 0 : @root.depth
+    @root.depth
   end
   
 
   def insert(n)
-    if @root.nil?
-      @root = BinaryTreeNode.new(n)
-    else
-      @root.insert(n)
-    end
+    @root = @root.insert(n)
   end
 
 
   def find(n)
-    @root.nil? ? false : @root.find(n)
+    @root.find(n)
   end
   
 
@@ -40,21 +36,21 @@ class DBCBinaryTree
 
 
   def preorder &block
-      @root.preorder &block unless @root.nil?
+      @root.preorder &block
   end
 
 
   def inorder &block
-      @root.inorder &block unless @root.nil?
+      @root.inorder &block
   end
 
 
   def postorder &block
-      @root.postorder &block unless @root.nil?
+      @root.postorder &block
   end
 
   def map &block
-    @root.nil? ? DBCBinaryTree.new : DBCBinaryTree.new(@root.map &block)
+    DBCBinaryTree.new(@root.map &block)
   end
 
 end
